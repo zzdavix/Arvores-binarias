@@ -12,6 +12,11 @@ Arv* a = arv_cria(
 );
 
 arv_imprime(a);
+printf("\n\n\n");
 
+arv_busca(a, 'c');
+
+arv_libera(a);
+    
 return 0;
 }
