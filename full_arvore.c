@@ -106,6 +106,28 @@ ArvNo* arv_busca (Arv* a, char c){
     return busca(a->raiz, c);
 }
 
+// função que retorna o máximo entre 2 números inteiros
+static int max2 (int a, int b){
+    if (a>b){
+        return a;
+    }
+    else{
+        return b;
+    }
+}
+
+static int altura (ArvNo* r){
+    if (r==NULL){
+        return -1;
+    }
+    else{
+        return 1 + max2(altura(r->esq), altura(r->dir));
+    }
+}
+
+int arv_altura (Arv* a){
+    return altura(a->raiz);
+}
 
 
 int main(){
@@ -120,6 +142,11 @@ Arv* a = arv_cria(
 );
 
 arv_imprime(a);
+printf("\n\n\n");
 
+arv_busca(a, 'c');
+
+arv_libera(a);
+    
 return 0;
 }
