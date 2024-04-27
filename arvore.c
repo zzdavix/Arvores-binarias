@@ -106,3 +106,27 @@ static ArvNo* busca (ArvNo* r, char c){
 ArvNo* arv_busca (Arv* a, char c){
     return busca(a->raiz, c);
 }
+
+// função que retorna o máximo entre 2 números inteiros
+static int max2 (int a, int b){
+    if (a>b){
+        return a;
+    }
+    else{
+        return b;
+    }
+}
+
+// função que retorna a altura da árvore
+static int altura (ArvNo* r){
+    if (r==NULL){
+        return -1;
+    }
+    else{
+        return 1 + max2(altura(r->esq), altura(r->dir));
+    }
+}
+
+int arv_altura (Arv* a){
+    return altura(a->raiz);
+}
