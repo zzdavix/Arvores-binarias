@@ -58,18 +58,20 @@ void abb_imprime (Arv* a){
 }
 
 // função recursiva para liberação da árvore
-static void libera (ArvNo* r){
+void libera_no (ArvNo* r){
     if( r != NULL){
-        libera(r->esq); 
-        libera(r->dir);
+        libera_no(r->esq); 
+        libera_no(r->dir);
         free(r);
     }
 }
 
 // função que libera a árvore
-void arv_libera (Arv* a){
-    libera(a->raiz);
-    free(a);
+void abb_libera (Arv* a){
+    if(a != NULL){
+        libera_no(a->raiz);
+        free(a);
+    }
 }
 
 // função que verifica existência do caráctere
@@ -138,16 +140,101 @@ int arv_altura (Arv* a){
     return altura(a->raiz);
 }
 
+
+
+
+// função de remoção de um elemento
+static ArvNo* retira (ArvNo* r, int v){
+    if (r == NULL){
+        return NULL;
+    }
+    else if (r->info > v){
+        r->esq = retira (r->esq, v);
+    }
+    else if (r->info < v){
+        r->dir = retira (r->dir, v);
+    }
+    else{
+        if (r->esq == NULL && r->dir == NULL){
+            free(r);
+            r = NULL;
+        }
+        else if (r->esq == NULL){
+            ArvNo* t = r;
+            r = r->dir;
+            free(t);
+        }
+        else if (r->dir == NULL){
+            ArvNo* t = r;
+            r = r->esq;
+            free(t);
+        }
+        else{
+            ArvNo* f = r->esq;
+            while (f->dir != NULL){
+                f = f->dir;
+            }
+            r->info = f->info;
+            f->info = v;
+            r->esq = retira(r->esq, v);
+        }
+    }
+    return r;
+}
+
+void abb_retira (Arv* a, int v){
+    a->raiz = retira(a->raiz, v);
+}
+
+
+
+
+
 int main(){
     Arv* a = abb_cria();
-    abb_insere(a, 10);
-    abb_insere(a, 20);
     abb_insere(a, 30);
+    abb_insere(a, 20);
+    abb_insere(a, 600);
     abb_insere(a, 40);
-    abb_insere(a, 50);
-    abb_insere(a, 60);
+    abb_insere(a, 210);
+    abb_insere(a, 10);
 
+    printf("----- Árvore -----\n");
     abb_imprime(a);
+    printf("\n\n\n");
+
+    ArvNo* resultado = abb_busca(a, 210);
+    if (resultado){
+        printf("Valor encontrado: %d", resultado->info);
+    }
+    else {
+        printf("Valor não encontrado");
+    }
+    printf("\n\n\n");
+
+    int altura = arv_altura(a);
+    printf("Altura da árvore: %d", altura);
+
+    abb_retira(a, 210);
+
+    printf("\n\n\n----- Árvore 2 -----\n");
+    abb_imprime(a);
+    printf("\n\n\n");
+
+    ArvNo* resultado2 = abb_busca(a, 210);
+    if (resultado2){
+        printf("Valor encontrado: %d", resultado2->info);
+    }
+    else {
+        printf("Valor não encontrado");
+    }
+    printf("\n\n\n");
+
+    int altura2 = arv_altura(a);
+    printf("Altura da árvore: %d", altura2);
+
+    abb_libera(a);
 
 
+    return 0;
 }
